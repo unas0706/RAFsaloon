@@ -1,0 +1,73 @@
+/* Extra Small Devices (Phones, 320px - 480px) */
+@media only screen and (max-width: 480px) {
+  .hidden-xs {
+    display: none;
+  }
+
+  .visible-xs {
+    display: block;
+  }
+
+  .hero-xs {
+    height: 100%;
+  }
+  .hero-img-xs {
+    height: 100%;
+    width: 100%;
+    opacity: 0.6;
+    object-fit: cover;
+  }
+  .text {
+    bottom: 65%;
+  }
+  .main-text-xs {
+    font-size: 2rem;
+    margin-bottom: 5%;
+  }
+  .sub-text-xs {
+    font-size: 12px;
+  }
+  .btn-primary {
+    padding: 5% 25%;
+  }
+  .gallery-sec {
+    grid-template-columns: 1fr;
+  }
+  .filter {
+    font-size: 12px;
+  }
+  .service-txt div {
+    font-size: 9px;
+  }
+}
+
+/* Small Devices (Tablets, 481px - 768px) */
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+  /* .hero-xs {
+    border: 1px solid #fff;
+  } */
+}
+
+/* Medium Devices (Laptops, 769px - 1024px) */
+@media only screen and (min-width: 769px) and (max-width: 1024px) {
+}
+
+/* Large Devices (Desktops, 1025px - 1440px) */
+@media only screen and (min-width: 1025px) and (max-width: 1440px) {
+  .hero,
+  .services,
+  .barbers {
+    width: 80%;
+    margin: auto;
+  }
+}
+
+/* Extra Large Screens (TVs & Large Monitors, 1441px and above) */
+@media only screen and (min-width: 1441px) {
+  .hero,
+  .services,
+  .barbers {
+    width: 80%;
+    margin: auto;
+  }
+}

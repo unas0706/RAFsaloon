@@ -1,0 +1,1314 @@
+:root {
+  --bg-color: #000;
+  --head-color: #fff;
+  --secondary-color: #b3b3b3;
+  --theme-color: #ab7427;
+}
+
+/* Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#root {
+  height: 100dvh;
+  width: 100dvw;
+  background-color: var(--bg-color);
+  color: var(--secondary-color);
+  /* overflow: scroll; */
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+a {
+  text-decoration: none;
+  color: var(--secondary-color);
+}
+
+nav {
+  height: 15%;
+  width: 95%;
+  margin: auto;
+  /* margin-top: 2%; */
+  display: flex;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  background: var(--bg-color);
+  z-index: 1;
+  overflow: hidden;
+}
+
+.logo {
+  height: 100%;
+  width: 150px;
+}
+
+.nav-links {
+  width: 60%;
+  display: inline-block;
+  height: 100%;
+  list-style: none;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.nav-link a {
+  text-decoration: none;
+  color: var(--head-color);
+  transition-duration: 0.5s;
+}
+
+.nav-link a:hover {
+  color: var(--theme-color);
+}
+
+/* loginpage - Preserving previous login styles */
+.login-container {
+  background-color: var(--bg-color);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.login-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 40px;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.logo-container {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.login-logo {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  background-color: var(--theme-color);
+  color: var(--head-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  font-weight: bold;
+  border-radius: 50%;
+}
+
+.login-title {
+  color: var(--head-color);
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.login-subtitle {
+  color: var(--secondary-color);
+  font-size: 14px;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  color: var(--secondary-color);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.form-group input {
+  padding: 12px 16px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--head-color);
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--theme-color);
+  box-shadow: 0 0 0 2px rgba(171, 116, 39, 0.2);
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.remember-me input {
+  accent-color: var(--theme-color);
+}
+
+.remember-me label {
+  color: var(--secondary-color);
+  cursor: pointer;
+}
+
+.forgot-password {
+  color: var(--theme-color);
+  text-decoration: none;
+  transition: opacity 0.3s;
+}
+
+.forgot-password:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.login-button {
+  background-color: var(--theme-color);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #c58a35;
+}
+
+.login-button:disabled {
+  background-color: var(--secondary-color);
+  cursor: not-allowed;
+}
+
+.signup-link {
+  text-align: center;
+  margin-top: 20px;
+  color: var(--secondary-color);
+  font-size: 14px;
+}
+
+.signup-link a {
+  color: var(--theme-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.3s;
+}
+
+.signup-link a:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 30px 20px;
+  }
+
+  .login-logo {
+    width: 60px;
+    height: 60px;
+    font-size: 20px;
+  }
+
+  .login-title {
+    font-size: 24px;
+  }
+}
+
+/* Home page */
+
+/* Admin Container */
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Mobile Header */
+.mobile-header {
+  display: none;
+  padding: 1rem;
+  background-color: var(--bg-color);
+  color: var(--head-color);
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  width: 100%;
+  z-index: 100;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.mobile-header h2 {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.menu-toggle {
+  background: none;
+  border: none;
+  color: var(--head-color);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.logout-btn-mobile {
+  background: none;
+  border: none;
+  color: var(--head-color);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  background-color: var(--bg-color);
+  color: var(--head-color);
+  position: fixed;
+  height: 100vh;
+  transition: transform 0.3s ease;
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 2rem 1.5rem;
+  overflow-y: auto;
+}
+
+.franchise-info {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.franchise-info h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: var(--theme-color);
+  font-weight: 600;
+}
+
+.franchise-info .location {
+  color: var(--secondary-color);
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.owner-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--head-color);
+  font-size: 0.9rem;
+}
+
+.main-nav {
+  flex: 1;
+}
+
+.main-nav ul {
+  list-style: none;
+}
+
+.main-nav li {
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.main-nav li:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.main-nav li.active {
+  background-color: var(--theme-color);
+}
+
+.main-nav li {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  color: var(--head-color);
+  text-decoration: none;
+  gap: 0.8rem;
+  font-size: 0.95rem;
+}
+
+.main-nav li svg {
+  font-size: 1.1rem;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-footer button {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  width: 100%;
+  padding: 0.8rem 1rem;
+  background: none;
+  border: none;
+  color: var(--head-color);
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.sidebar-footer button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.logout-btn {
+  margin-top: 0.5rem;
+  color: #ff6b6b !important;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  margin-left: 280px;
+  padding: 2rem;
+  background-color: #fff;
+  min-height: 100vh;
+}
+
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #eee;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.content-header h1 {
+  font-size: 1.8rem;
+  color: var(--bg-color);
+  margin-right: auto;
+  font-weight: 600;
+}
+
+.date-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.date-filter input {
+  padding: 0.5rem 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.clear-date {
+  padding: 0.5rem 0.8rem;
+  border: none;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background-color 0.2s;
+}
+
+.clear-date:hover {
+  background-color: #e0e0e0;
+}
+
+/* Dashboard Content */
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat-card {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+}
+
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: rgba(171, 116, 39, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--theme-color);
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.stat-info h3 {
+  font-size: 0.9rem;
+  color: var(--secondary-color);
+  margin-bottom: 0.3rem;
+  font-weight: 500;
+}
+
+.stat-info p {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--bg-color);
+}
+
+.recent-bookings {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.recent-bookings h2 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: var(--bg-color);
+  font-weight: 600;
+}
+
+.search-bar {
+  position: relative;
+  margin-bottom: 1.5rem;
+  max-width: 100%;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 0.7rem 1rem 0.7rem 2.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #fff;
+  font-size: 0.95rem;
+}
+
+.search-bar svg {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--secondary-color);
+}
+
+.bookings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.booking-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.booking-time {
+  font-weight: 600;
+  min-width: 80px;
+  color: var(--bg-color);
+}
+
+.booking-details {
+  flex: 1;
+  min-width: 200px;
+}
+
+.booking-details h4 {
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+  font-weight: 500;
+}
+
+.booking-details p {
+  font-size: 0.9rem;
+  color: var(--secondary-color);
+}
+
+.booking-status {
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  min-width: 80px;
+  text-align: center;
+}
+
+.booking-status.confirmed {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.booking-status.completed {
+  background-color: #e8f5e9;
+  color: #388e3c;
+}
+
+.booking-status.pending {
+  background-color: #fff8e1;
+  color: #ffa000;
+}
+
+.no-results {
+  padding: 2rem;
+  text-align: center;
+  color: var(--secondary-color);
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Bookings and Members Tables */
+.bookings-content,
+.members-content {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.bookings-header,
+.members-header {
+  margin-bottom: 1.5rem;
+}
+
+.bookings-header h2,
+.members-header h2 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: var(--bg-color);
+  font-weight: 600;
+}
+
+.bookings-header p,
+.members-header p {
+  color: var(--secondary-color);
+  font-size: 0.9rem;
+}
+
+.bookings-table,
+.members-table {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  padding: 1rem 1.5rem;
+  background-color: var(--bg-color);
+  color: var(--head-color);
+  font-weight: 500;
+  gap: 1rem;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  padding: 1rem 1.5rem;
+  background-color: white;
+  border-bottom: 1px solid #eee;
+  align-items: center;
+  gap: 1rem;
+}
+
+.status,
+.membership {
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: center;
+  width: fit-content;
+}
+
+.status.confirmed {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.status.completed {
+  background-color: #e8f5e9;
+  color: #388e3c;
+}
+
+.status.pending {
+  background-color: #fff8e1;
+  color: #ffa000;
+}
+
+.membership.premium {
+  background-color: #f3e5f5;
+  color: #8e24aa;
+}
+
+.membership.standard {
+  background-color: #e0f7fa;
+  color: #00acc1;
+}
+
+/* Gallery Content */
+.gallery-content {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.gallery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.gallery-header h2 {
+  font-size: 1.3rem;
+  color: var(--bg-color);
+  font-weight: 600;
+}
+
+.upload-container {
+  position: relative;
+}
+
+.upload-btn {
+  background-color: var(--theme-color);
+  color: white;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  transition: background-color 0.2s;
+}
+
+.upload-btn:hover {
+  background-color: #c58a35;
+}
+
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.image-card {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+.image-card:hover {
+  transform: translateY(-3px);
+}
+
+.image-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.delete-btn {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: rgba(255, 0, 0, 0.8);
+  color: white;
+  border: none;
+  padding: 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  transition: background-color 0.2s;
+}
+
+.delete-btn:hover {
+  background-color: rgba(255, 0, 0, 1);
+}
+
+.no-images {
+  text-align: center;
+  padding: 3rem;
+  color: var(--secondary-color);
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Franchise Content */
+.franchise-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.franchise-card,
+.performance-card {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.franchise-card h2,
+.performance-card h2 {
+  font-size: 1.3rem;
+  margin-bottom: 1.5rem;
+  color: var(--bg-color);
+  font-weight: 600;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.info-grid,
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.info-item,
+.metric-item {
+  margin-bottom: 1rem;
+}
+
+.info-item label,
+.metric-item label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--secondary-color);
+  margin-bottom: 0.3rem;
+}
+
+.info-item p,
+.metric-item p {
+  font-size: 1rem;
+  color: var(--bg-color);
+  font-weight: 500;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.modal h2 {
+  font-size: 1.3rem;
+  margin-bottom: 1.5rem;
+  color: var(--bg-color);
+  font-weight: 600;
+  text-align: center;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.form-actions button {
+  padding: 0.7rem 1.2rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.form-actions button[type="submit"] {
+  background-color: var(--theme-color);
+  color: white;
+}
+
+.form-actions button[type="submit"]:hover {
+  background-color: #c58a35;
+}
+
+.form-actions button[type="button"] {
+  background-color: #f0f0f0;
+  color: var(--bg-color);
+}
+
+.form-actions button[type="button"]:hover {
+  background-color: #e0e0e0;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: var(--secondary-color);
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .info-grid,
+  .metrics-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .mobile-header {
+    display: flex;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+    width: 280px;
+    top: 0;
+    padding-top: 5rem;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding-top: 5rem;
+  }
+
+  .content-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .date-filter {
+    width: 100%;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .booking-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .booking-time,
+  .booking-date {
+    width: auto;
+  }
+}
+
+@media (max-width: 576px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-grid,
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .table-header,
+  .table-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .booking-status,
+  .membership {
+    width: 100%;
+  }
+
+  .image-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Add Member Button */
+.add-member-btn {
+  background-color: var(--theme-color);
+  color: white;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  transition: background-color 0.2s;
+}
+
+.add-member-btn:hover {
+  background-color: #c58a35;
+}
+
+/* Subscription Styles */
+.subscription {
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-align: center;
+  width: fit-content;
+}
+
+.subscription.none {
+  background-color: #f5f5f5;
+  color: #666;
+}
+
+.subscription.monthly {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.subscription.quarterly {
+  background-color: #e8f5e9;
+  color: #388e3c;
+}
+
+.subscription.annual {
+  background-color: #f3e5f5;
+  color: #8e24aa;
+}
+
+.subscription-end {
+  display: block;
+  font-size: 0.7rem;
+  margin-top: 0.2rem;
+  color: #666;
+}
+
+/* Member Actions */
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.edit-btn {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.edit-btn:hover {
+  background-color: #bbdefb;
+}
+
+.delete-btn {
+  background-color: #ffebee;
+  color: #f44336;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s;
+}
+
+.delete-btn:hover {
+  background-color: #ffcdd2;
+}
+
+/* Modal Form Styles */
+.modal .form-group {
+  margin-bottom: 1rem;
+}
+
+.modal .form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--bg-color);
+  font-weight: 500;
+}
+
+.modal .form-group input,
+.modal .form-group select {
+  width: 100%;
+  padding: 0.7rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.modal .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.modal .form-actions button {
+  padding: 0.7rem 1.2rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.modal .form-actions button[type="submit"] {
+  background-color: var(--theme-color);
+  color: white;
+}
+
+.modal .form-actions button[type="submit"]:hover {
+  background-color: #c58a35;
+}
+
+.modal .form-actions button[type="button"] {
+  background-color: #f0f0f0;
+  color: var(--bg-color);
+}
+
+.modal .form-actions button[type="button"]:hover {
+  background-color: #e0e0e0;
+}
+
+/* Text Color Modifications */
+.login-card h1,
+.modal h2,
+.content-header h1,
+.recent-bookings h2,
+.bookings-header h2,
+.members-header h2,
+.gallery-header h2,
+.franchise-card h2,
+.performance-card h2 {
+  color: #333;
+}
+
+.stat-info h3,
+.bookings-header p,
+.members-header p,
+.info-item label,
+.metric-item label,
+.subscription-end {
+  color: #555;
+}
+
+.stat-info p,
+.info-item p,
+.metric-item p {
+  color: #222;
+}
+
+.no-results,
+.no-images,
+.loading {
+  color: #666;
+}
+
+.booking-details p,
+.table-row
+  > div:not(.status):not(.membership):not(.subscription):not(.actions) {
+  color: #444;
+}
+
+/* Status and membership colors remain using your variables */
+/* .booking-status.confirmed,
+.status.confirmed,
+.membership.premium,
+.subscription.monthly {
+  color: #fff !important;
+} */
+
+/* .booking-status.completed,
+.status.completed,
+.subscription.quarterly {
+  color: #fff !important;
+} */
+
+.booking-status.pending,
+.status.pending {
+  color: #5c3b00 !important;
+}
+
+/* .membership.standard,
+.subscription.annual {
+  color: #fff !important;
+} */
+
+.subscription.none {
+  color: #444 !important;
+}
+
+/* Form text colors */
+.form-group label {
+  color: #555 !important;
+}
+
+.form-group input,
+.form-group select {
+  color: #333 !important;
+}
+
+/* Sidebar text colors */
+.sidebar {
+  color: #eee !important;
+}
+
+.sidebar .franchise-info h3 {
+  color: var(--theme-color) !important;
+}
+
+.sidebar .franchise-info .location {
+  color: #ccc !important;
+}
+
+.sidebar .owner-info {
+  color: #ddd !important;
+}
+
+/* Mobile header text */
+.mobile-header h2 {
+  color: #fff !important;
+}
+
+/* Button text colors */
+.add-member-btn,
+.upload-btn,
+.modal .form-actions button[type="submit"],
+.login-card button {
+  color: #fff !important;
+}
+
+.edit-btn {
+  color: #1976d2 !important;
+}
+
+.delete-btn {
+  color: #f44336 !important;
+}
+
+.clear-date,
+.modal .form-actions button[type="button"] {
+  color: #333 !important;
+}
+
+/* Table header text */
+.table-header {
+  color: #fff !important;
+}
+
+/* Ensure all text remains visible and readable */
+.booking-item,
+.table-row,
+.image-card,
+.stat-card {
+  color: #333 !important;
+}
