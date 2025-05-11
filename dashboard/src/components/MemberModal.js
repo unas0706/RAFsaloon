@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaTimes } from "react-icons/fa";
+import { useOwner } from "../contexts/ownerContext";
 
 const MemberModal = ({
   isOpen,
@@ -8,6 +9,8 @@ const MemberModal = ({
   member,
   isEdit,
   isLoading,
+  setMemberForm1,
+  setmem,
 }) => {
   const [memberForm, setMemberForm] = useState({
     name: "",
@@ -42,10 +45,37 @@ const MemberModal = ({
 
   const handleMemberFormChange = (e) => {
     const { name, value } = e.target;
-    setMemberForm({
-      ...memberForm,
-      [name]: value,
-    });
+    setMemberForm((prev) => ({
+      ...prev,
+      [name]: name === "visits" ? Number(value) : value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setmem(memberForm);
+
+    // const {
+    //   name,
+    //   joinDate,
+    //   visits,
+    //   membership,
+    //   subscription,
+    //   subscriptionEnd,
+    // } = memberForm;
+    // await addMember(
+    //   name,
+    //   joinDate,
+    //   visits,
+    //   membership,
+    //   subscription,
+    //   subscriptionEnd
+    // );
+    // console.log(memberForm);
+    setMemberForm1(memberForm);
+
+    onSubmit(memberForm); // pass data to parent
   };
 
   if (!isOpen) return null;
@@ -55,11 +85,8 @@ const MemberModal = ({
       <div className="modal">
         <div className="modal-header">
           <h2>{isEdit ? "Edit Member" : "Add New Member"}</h2>
-          <button onClick={onClose} className="close-btn">
-            <FaTimes />
-          </button>
         </div>
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Full Name</label>
             <input
@@ -125,7 +152,7 @@ const MemberModal = ({
                 name="subscriptionEnd"
                 value={memberForm.subscriptionEnd}
                 onChange={handleMemberFormChange}
-                required={memberForm.subscription !== "None"}
+                required
               />
             </div>
           )}

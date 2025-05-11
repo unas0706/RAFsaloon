@@ -1,0 +1,53 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+.pnpm-debug.log
+
+# Logs
+logs
+*.log
+*.log.*
+
+# dotenv environment files
+.env
+.env.*.local
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Build artifacts
+dist/
+build/
+tmp/
+temp/
+.cache/
+.out/
+
+# Coverage results
+coverage/
+
+# Optional: if you're using PM2 or similar
+pids
+*.pid
+*.seed
+
+# TypeScript
+*.tsbuildinfo
+
+# ESLint/Prettier caches
+.eslintcache
+.prettiercache

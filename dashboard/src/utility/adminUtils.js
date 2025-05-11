@@ -3,10 +3,14 @@ export const filterBookings = (bookings, selectedDate, searchQuery) => {
     ? bookings.filter((booking) => booking.date === selectedDate)
     : bookings;
 
-  return filteredByDate.filter(
-    (booking) =>
-      booking.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      booking.service.toLowerCase().includes(searchQuery.toLowerCase())
+  return (
+    bookings.length > 0 &&
+    filteredByDate?.filter((booking) => {
+      return (
+        booking.phone.toString().includes(searchQuery.toLowerCase()) ||
+        booking.service.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    })
   );
 };
 

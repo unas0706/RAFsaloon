@@ -14,8 +14,23 @@ import {
   filterMembers,
   calculateStatistics,
 } from "../utility/adminUtils";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useOwner } from "../contexts/ownerContext";
+import { all } from "axios";
 
 const AdminDashboard = () => {
+  const { user } = useAuth();
+  const { members, bookings, addMember, editMember } = useOwner();
+  const Navigate = useNavigate();
+  useEffect(() => {
+    if (!user) {
+      Navigate("/login");
+    }
+    setFranchise(user?.owner?.franchise);
+    // setAllMembers(initialMembers);
+  });
+
   // State declarations
   const [activeTab, setActiveTab] = useState("dashboard");
   const [selectedDate, setSelectedDate] = useState("");
@@ -38,24 +53,14 @@ const AdminDashboard = () => {
   });
 
   // Initialize data with proper structure
-  const [allBookings, setAllBookings] = useState([]);
-  const [allMembers, setAllMembers] = useState([]);
-  const [franchise, setFranchise] = useState({
-    name: "Elite Salon",
-    location: "Downtown Branch",
-    owner: "Alex Johnson",
-    contact: "alex@elitesalon.com",
-    address: "456 Beauty Street, Downtown",
-    established: "March 2021",
-    stats: {
-      totalBookings: 0,
-      activeMembers: 0,
-      monthlyRevenue: 0,
-      customerRating: 0,
-      reviews: [],
-    },
-  });
+  const [allBookings, setAllBookings] = useState(bookings?.bookings);
+  const [allMembers, setAllMembers] = useState(members);
+  const [franchise, setFranchise] = useState(user?.owner);
+  const [mem, setmem] = useState();
 
+  useEffect(() => {
+    setAllBookings(bookings?.bookings);
+  });
   // Load initial data
   useEffect(() => {
     // Sample bookings data
@@ -78,37 +83,15 @@ const AdminDashboard = () => {
       },
     ];
 
-    // Sample members data
-    const initialMembers = [
-      {
-        id: 1,
-        name: "Michael Brown",
-        joinDate: "2023-01-15",
-        visits: 12,
-        membership: "Premium",
-        subscription: "Monthly",
-        subscriptionEnd: "2023-12-31",
-      },
-      {
-        id: 2,
-        name: "Emily Davis",
-        joinDate: "2023-03-22",
-        visits: 8,
-        membership: "Standard",
-        subscription: "None",
-        subscriptionEnd: "",
-      },
-    ];
-
-    setAllBookings(initialBookings);
-    setAllMembers(initialMembers);
+    // setAllBookings(initialBookings);
+    setAllMembers(members);
 
     // Update franchise stats
     setFranchise((prev) => ({
       ...prev,
       stats: {
         totalBookings: initialBookings.length,
-        activeMembers: initialMembers.length,
+        activeMembers: members?.length,
         monthlyRevenue: 12450,
         customerRating: 4.8,
         reviews: [
@@ -123,7 +106,7 @@ const AdminDashboard = () => {
     if (savedImages) {
       setGalleryImages(JSON.parse(savedImages));
     }
-  }, []);
+  }, [members]);
 
   // Save gallery images to localStorage
   useEffect(() => {
@@ -194,15 +177,61 @@ const AdminDashboard = () => {
     // In a real app, you would save to API here
   };
 
+  // useEffect(() => {
+  //   if (isAddMemberOpen && mem) {
+  //     console.log("add");
+  //   }
+
+  //   if (isEditMemberOpen && mem) {
+  //     console.log("edit");
+  //   }
+  // }, [mem, isAddMemberOpen, isEditMemberOpen]);
+
   // Add new member
-  const handleAddMember = (e) => {
-    e.preventDefault();
+  const handleAddMember = async (e) => {
+    // e.preventDefault();
     const newMember = {
       id: Date.now(),
       ...memberForm,
       visits: parseInt(memberForm.visits),
     };
-    setAllMembers((prev) => [...prev, newMember]);
+    if (isAddMemberOpen && mem) {
+      addMember(
+        mem.name,
+        mem.joinDate,
+        mem.visits,
+        mem.membership,
+        mem.subscription,
+        mem.subscriptionEnd
+      );
+    }
+
+    const {
+      name,
+      joinDate,
+      visits,
+      membership,
+      subscription,
+      subscriptionEnd,
+    } = newMember;
+    // console.log(
+    //   name,
+    //   joinDate,
+    //   visits,
+    //   membership,
+    //   subscription,
+    //   subscriptionEnd
+    // );
+
+    // await addMember(
+    //   name,
+    //   joinDate,
+    //   visits,
+    //   membership,
+    //   subscription,
+    //   subscriptionEnd
+    // );
+    // setAllMembers((prev) => [...prev, newMember]);
     setIsAddMemberOpen(false);
     setMemberForm({
       name: "",
@@ -216,18 +245,29 @@ const AdminDashboard = () => {
 
   // Edit member
   const handleEditMember = (e) => {
-    e.preventDefault();
+    // e.preventDefault();
     setAllMembers((prev) =>
-      prev.map((member) =>
-        member.id === currentMember.id
+      prev.map((member) => {
+        return member.id === currentMember.id
           ? {
               ...memberForm,
               id: currentMember.id,
               visits: parseInt(memberForm.visits),
             }
-          : member
-      )
+          : member;
+      })
     );
+
+    if (isEditMemberOpen && mem) {
+      editMember(
+        mem.name,
+        mem.visits,
+        mem.membership,
+        mem.subscription,
+        mem.subscriptionEnd
+      );
+    }
+
     setIsEditMemberOpen(false);
     setCurrentMember(null);
   };
@@ -254,151 +294,156 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="admin-container">
-      {/* Change Password Modal */}
-      <ChangePasswordModal
-        isOpen={isChangePasswordOpen}
-        onClose={() => setIsChangePasswordOpen(false)}
-        isLoading={isLoading}
-      />
+    user && (
+      <div className="admin-container">
+        {/* Change Password Modal */}
+        <ChangePasswordModal
+          isOpen={isChangePasswordOpen}
+          onClose={() => setIsChangePasswordOpen(false)}
+          isLoading={isLoading}
+        />
 
-      {/* Member Modal */}
-      <MemberModal
-        isOpen={isAddMemberOpen || isEditMemberOpen}
-        onClose={() => {
-          setIsAddMemberOpen(false);
-          setIsEditMemberOpen(false);
-        }}
-        onSubmit={isAddMemberOpen ? handleAddMember : handleEditMember}
-        member={currentMember}
-        isEdit={isEditMemberOpen}
-        isLoading={isLoading}
-        memberForm={memberForm}
-        handleMemberFormChange={handleMemberFormChange}
-      />
-
-      {/* Franchise Edit Modal */}
-      <FranchiseEditModal
-        isOpen={isEditFranchiseOpen}
-        onClose={() => setIsEditFranchiseOpen(false)}
-        onSubmit={handleSaveFranchise}
-        franchise={franchise}
-        handleFranchiseChange={handleFranchiseChange}
-      />
-
-      {/* Mobile Header */}
-      <div className="mobile-header">
-        <button
-          className="menu-toggle"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
-        </button>
-        <h2>Salon Admin</h2>
-        <button className="logout-btn-mobile">
-          <FaSignOutAlt />
-        </button>
-      </div>
-
-      {/* Sidebar */}
-      <Sidebar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        isMobileMenuOpen={isMobileMenuOpen}
-        setIsMobileMenuOpen={setIsMobileMenuOpen}
-        franchise={franchise}
-        setIsChangePasswordOpen={setIsChangePasswordOpen}
-      />
-
-      {/* Main Content */}
-      <main className="main-content">
-        <header className="content-header">
-          <h1>
-            {activeTab === "dashboard" && "Dashboard Overview"}
-            {activeTab === "bookings" && "Booking Management"}
-            {activeTab === "members" && "Member Management"}
-            {activeTab === "gallery" && "Salon Gallery"}
-            {activeTab === "franchise" && "Franchise Details"}
-          </h1>
-
-          {activeTab !== "franchise" && activeTab !== "members" && (
-            <div className="date-filter">
-              <input
-                type="date"
-                value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
-              />
-              {selectedDate && (
-                <button onClick={() => setSelectedDate("")}>Clear</button>
-              )}
-            </div>
-          )}
-
-          {activeTab === "members" && (
-            <button onClick={() => setIsAddMemberOpen(true)}>Add Member</button>
-          )}
-        </header>
-
-        {/* Dashboard Tab */}
-        {activeTab === "dashboard" && (
-          <DashboardContent
-            stats={stats}
-            displayedBookings={displayedBookings}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            selectedDate={selectedDate}
-          />
-        )}
-
-        {/* Bookings Tab */}
-        {activeTab === "bookings" && (
-          <BookingsContent
-            bookings={displayedBookings}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            selectedDate={selectedDate}
-          />
-        )}
-
-        {/* Members Tab */}
-        {activeTab === "members" && (
-          <MembersContent
-            members={displayedMembers}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            onEditMember={openEditMember}
-            onDeleteMember={handleDeleteMember}
-            onAddMember={() => setIsAddMemberOpen(true)}
-          />
-        )}
-
-        {/* Gallery Tab */}
-        {activeTab === "gallery" && (
-          <GalleryContent
-            galleryImages={galleryImages}
-            handleImageUpload={handleImageUpload}
-            handleDeleteImage={handleDeleteImage}
+        {/* Member Modal */}
+        {
+          <MemberModal
+            isOpen={isAddMemberOpen || isEditMemberOpen}
+            onClose={() => {
+              setIsAddMemberOpen(false);
+              setIsEditMemberOpen(false);
+            }}
+            onSubmit={isAddMemberOpen ? handleAddMember : handleEditMember}
+            member={currentMember}
+            isEdit={isEditMemberOpen}
             isLoading={isLoading}
+            memberForm={memberForm}
+            setMemberForm1={setMemberForm}
+            setmem={setmem}
+            handleMemberFormChange={handleMemberFormChange}
           />
-        )}
+        }
 
-        {/* Franchise Tab */}
-        {activeTab === "franchise" && (
-          <div className="franchise-tab-container">
-            <div className="franchise-header">
-              <h2>Franchise Details</h2>
-              <button
-                className="edit-franchise-btn"
-                onClick={() => setIsEditFranchiseOpen(true)}
-              >
-                <FaEdit /> Edit Franchise
-              </button>
+        {/* Franchise Edit Modal */}
+        <FranchiseEditModal
+          isOpen={isEditFranchiseOpen}
+          onClose={() => setIsEditFranchiseOpen(false)}
+          onSubmit={handleSaveFranchise}
+          franchise={franchise}
+          handleFranchiseChange={handleFranchiseChange}
+        />
+
+        {/* Mobile Header */}
+        <div className="mobile-header">
+          <button
+            className="menu-toggle"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <FaTimes /> : <FaBars />}
+          </button>
+          <h2>Salon Admin</h2>
+          <button className="logout-btn-mobile">
+            <FaSignOutAlt />
+          </button>
+        </div>
+
+        {/* Sidebar */}
+        <Sidebar
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          isMobileMenuOpen={isMobileMenuOpen}
+          setIsMobileMenuOpen={setIsMobileMenuOpen}
+          franchise={franchise}
+          setIsChangePasswordOpen={setIsChangePasswordOpen}
+        />
+
+        {/* Main Content */}
+        <main className="main-content">
+          <header className="content-header">
+            <h1>
+              {activeTab === "dashboard" && "Dashboard Overview"}
+              {activeTab === "bookings" && "Booking Management"}
+              {activeTab === "members" && "Member Management"}
+              {activeTab === "gallery" && "Salon Gallery"}
+              {activeTab === "franchise" && "Franchise Details"}
+            </h1>
+
+            {activeTab !== "franchise" && activeTab !== "members" && (
+              <div className="date-filter">
+                <input
+                  type="date"
+                  value={selectedDate}
+                  onChange={(e) => setSelectedDate(e.target.value)}
+                />
+                {selectedDate && (
+                  <button onClick={() => setSelectedDate("")}>Clear</button>
+                )}
+              </div>
+            )}
+          </header>
+
+          {/* Dashboard Tab */}
+          {activeTab === "dashboard" && (
+            <DashboardContent
+              stats={stats}
+              displayedBookings={displayedBookings}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              selectedDate={selectedDate}
+            />
+          )}
+
+          {/* Bookings Tab */}
+          {activeTab === "bookings" && (
+            <BookingsContent
+              bookings={displayedBookings}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              selectedDate={selectedDate}
+            />
+          )}
+
+          {/* Members Tab */}
+          {activeTab === "members" && (
+            <MembersContent
+              members={displayedMembers}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              onEditMember={openEditMember}
+              onDeleteMember={handleDeleteMember}
+              onAddMember={() => {
+                setIsAddMemberOpen(true);
+              }}
+              setIsAddMemberOpen={setIsAddMemberOpen}
+            />
+          )}
+
+          {/* Gallery Tab */}
+          {activeTab === "gallery" && (
+            <GalleryContent
+              galleryImages={galleryImages}
+              handleImageUpload={handleImageUpload}
+              handleDeleteImage={handleDeleteImage}
+              isLoading={isLoading}
+            />
+          )}
+
+          {/* Franchise Tab */}
+          {activeTab === "franchise" && (
+            <div className="franchise-tab-container">
+              <div className="franchise-header">
+                <h2>Franchise Details</h2>
+                <button
+                  className="edit-franchise-btn"
+                  onClick={() => setIsEditFranchiseOpen(true)}
+                >
+                  <FaEdit /> Edit Franchise
+                </button>
+              </div>
+              <FranchiseContent franchise={franchise} />
             </div>
-            <FranchiseContent franchise={franchise} />
-          </div>
-        )}
-      </main>
-    </div>
+          )}
+        </main>
+      </div>
+    )
   );
 };
 

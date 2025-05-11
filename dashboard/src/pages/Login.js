@@ -1,20 +1,54 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const Login = () => {
+  const { login, user } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [loggedin, setIsLoggesin] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    if (loggedin || user) {
+      navigate("/");
+    }
+  }, [loggedin]);
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      console.log("Login attempted with:", { email, password, rememberMe });
+    try {
+      var loggedin = await login(email, password);
+      setIsLoggesin(loggedin);
+    } catch (error) {
+      console.error("Login failed:", error);
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
+
+    // Simulate API call
+    // try {
+    //   let val = await AuthApi.post("/api/owners/login", { email, password });
+    //   console.log(val);
+    //   // jane@example.com
+    //   // securePassword123
+    // } catch (err) {
+    //   if (err.response) {
+    //     // Server responded with a status other than 2xx
+    //     console.error("Error Response:", err.response.data);
+    //     console.error("Status:", err.response.status);
+    //   } else if (err.request) {
+    //     // No response received
+    //     console.error("No response from server:", err.request);
+    //   } else {
+    //     // Something else went wrong
+    //     console.error("Error:", err.message);
+    //   }
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
 
   return (
@@ -23,7 +57,6 @@ const Login = () => {
         <div className="logo-container">
           <img src="logo.jpg" alt="Company Logo" className="logo" />
           <h1 className="login-title">Welcome Back</h1>
-          <p className="login-subtitle">Please enter your details</p>
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">

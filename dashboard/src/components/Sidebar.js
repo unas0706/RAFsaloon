@@ -9,6 +9,7 @@ import {
   FaLock,
   FaSignOutAlt,
 } from "react-icons/fa";
+import { useAuth } from "../contexts/AuthContext";
 
 const Sidebar = ({
   activeTab,
@@ -18,6 +19,7 @@ const Sidebar = ({
   franchise,
   setIsChangePasswordOpen,
 }) => {
+  const { logout } = useAuth();
   return (
     <aside className={`sidebar ${isMobileMenuOpen ? "open" : ""}`}>
       <div className="sidebar-content">
@@ -59,7 +61,12 @@ const Sidebar = ({
             <FaLock />
             <span>Change Password</span>
           </button>
-          <button className="logout-btn">
+          <button
+            className="logout-btn"
+            onClick={async () => {
+              await logout();
+            }}
+          >
             <FaSignOutAlt />
             <span>Logout</span>
           </button>

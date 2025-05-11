@@ -7,7 +7,7 @@ const MembersContent = ({
   setSearchQuery = () => {},
   onEditMember = () => {},
   onDeleteMember = () => {},
-  onAddMember = () => {},
+  setIsAddMemberOpen,
 }) => {
   return (
     <div className="members-content">
@@ -22,7 +22,12 @@ const MembersContent = ({
       </div>
       <div className="members-header">
         <h2>Registered Members</h2>
-        <button className="add-member-btn" onClick={onAddMember}>
+        <button
+          className="add-member-btn"
+          onClick={() => {
+            setIsAddMemberOpen(true);
+          }}
+        >
           <FaPlus /> Add Member
         </button>
         <p>Showing {members.length} members</p>
@@ -62,12 +67,12 @@ const MembersContent = ({
                 >
                   <FaEdit />
                 </button>
-                <button
+                {/* <button
                   className="delete-btn"
                   onClick={() => onDeleteMember(member.id)}
                 >
                   <FaTrash />
-                </button>
+                </button> */}
               </div>
             </div>
           ))}

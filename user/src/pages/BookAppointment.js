@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+import userApi from "../API/UserApi";
 
 const services = ["Tattoo", "Haircut", "Beard Trim", "Facial"];
 const locations = [
-  "Downtown Salon",
-  "Uptown Studio",
-  "City Center Branch",
-  "Suburban Spa",
+  { _id: "681645b9259a6d7e083b0df7", location: "Downtown LA" },
+  { _id: "66102cd...", location: "Uptown NY" },
 ];
 const timeSlots = [
   "10:00 AM",
@@ -23,18 +22,37 @@ const BookAppointment = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const queryParams = new URLSearchParams(location.search);
-  const selectedService = queryParams.get("service") || "Choose Service";
+  const service = queryParams.get("service") || "Choose Service";
 
   const [date, setDate] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState("");
+  const [franchise, setFranchise] = useState("");
   const [phone, setPhone] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
+  const [time, settime] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(
-      `Appointment booked for ${selectedService} on ${date} at ${selectedLocation} at ${selectedTime}. Contact: ${phone}`
-    );
+    try {
+      let val = await userApi.post("api/bookings/", {
+        service,
+        date,
+        franchise,
+        time,
+        phone,
+      });
+      console.log(val);
+    } catch (err) {
+      if (err.response) {
+        // Server responded with a status other than 2xx
+        console.error("Error Response:", err.response.data);
+        console.error("Status:", err.response.status);
+      } else if (err.request) {
+        // No response received
+        console.error("No response from server:", err.request);
+      } else {
+        // Something else went wrong
+        console.error("Error:", err.message);
+      }
+    }
   };
 
   return (
@@ -66,15 +84,15 @@ const BookAppointment = () => {
             marginBottom: "1.5rem",
           }}
         >
-          {selectedService !== "Choose Service"
-            ? `Selected Service: ${selectedService}`
+          {service !== "Choose Service"
+            ? `Selected Service: ${service}`
             : "Please select a service"}
         </p>
         <div
           style={{ width: "100%", maxWidth: "400px", marginBottom: "1.5rem" }}
         >
           <select
-            value={selectedService}
+            value={service}
             onChange={(e) =>
               navigate(`/bookappointment?service=${e.target.value}`)
             }
@@ -126,8 +144,8 @@ const BookAppointment = () => {
             }}
           />
           <select
-            value={selectedTime}
-            onChange={(e) => setSelectedTime(e.target.value)}
+            value={time}
+            onChange={(e) => settime(e.target.value)}
             required
             style={{
               width: "100%",
@@ -148,8 +166,8 @@ const BookAppointment = () => {
             ))}
           </select>
           <select
-            value={selectedLocation}
-            onChange={(e) => setSelectedLocation(e.target.value)}
+            value={franchise}
+            onChange={(e) => setFranchise(e.target.value)}
             required
             style={{
               width: "100%",
@@ -163,12 +181,13 @@ const BookAppointment = () => {
             }}
           >
             <option value="">Select Location</option>
-            {locations.map((loc, index) => (
-              <option key={index} value={loc}>
-                {loc}
+            {locations.map((loc) => (
+              <option key={loc._id} value={loc._id}>
+                {loc.location}
               </option>
             ))}
           </select>
+
           <input
             type="tel"
             placeholder="Enter your phone number"
