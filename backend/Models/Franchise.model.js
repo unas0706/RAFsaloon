@@ -26,6 +26,11 @@ const franchiseSchema = new mongoose.Schema(
     owner: { type: String, required: true },
     contact: { type: String },
     address: { type: String },
+    status: {
+      type: String,
+      default: "Active",
+      enum: ["Active", "Pending", "Inactive"],
+    },
     established: { type: String },
     stats: statsSchema,
   },

@@ -184,7 +184,7 @@ const FranchiseEditModal = ({
             />
           </div>
 
-          <div style={{ margin: "1rem 0" }}>
+          {/* <div style={{ margin: "1rem 0" }}>
             <label>Established Date</label>
             <input
               type="date"
@@ -194,7 +194,7 @@ const FranchiseEditModal = ({
               required
               style={styles.input}
             />
-          </div>
+          </div> */}
 
           <div
             style={{

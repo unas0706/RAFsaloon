@@ -1,23 +1,23 @@
 // App.js
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import PrivateRoute from './components/PrivateRoute';
-import Navigation from './components/Navigation';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import Profile from './pages/Profile';
-import FranchiseList from './pages/franchises/FranchiseList';
-import ViewFranchise from './pages/franchises/ViewFranchise';
-import EditFranchise from './pages/franchises/EditFranchise';
-import CreateFranchise from './pages/franchises/CreateFranchise';
-import { FranchiseProvider } from './context/FranchiseContext';
-import './styles/style.css';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import PrivateRoute from "./components/PrivateRoute";
+import Navigation from "./components/Navigation";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
+import FranchiseList from "./pages/franchises/FranchiseList";
+import ViewFranchise from "./pages/franchises/ViewFranchise";
+import EditFranchise from "./pages/franchises/EditFranchise";
+import CreateFranchise from "./pages/franchises/CreateFranchise";
+import { FranchiseProvider } from "./context/FranchiseContext";
+import { AuthProvider } from "./contexts/AuthContext";
+import "./styles/style.css";
 
 const App = () => (
   <Router>
-    <FranchiseProvider>
-      <AuthProvider>
+    <AuthProvider>
+      <FranchiseProvider>
         <Navigation />
         <div className="container">
           <Routes>
@@ -72,8 +72,8 @@ const App = () => (
             />
           </Routes>
         </div>
-      </AuthProvider>
-    </FranchiseProvider>
+      </FranchiseProvider>
+    </AuthProvider>
   </Router>
 );
 

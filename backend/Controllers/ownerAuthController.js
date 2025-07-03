@@ -1,4 +1,7 @@
 import FranchiseOwner from "../Models/Owner.model.js";
+import nodemailer from "nodemailer";
+import { Resend } from "resend";
+import fetch from "node-fetch";
 
 // Cookie options
 const cookieOptions = {
@@ -134,5 +137,59 @@ export const changePassword = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+
+    // Assuming req.owner is populated via middleware (e.g., auth middleware)
+    const owner = await FranchiseOwner.findOne({ email: "unas123@gmail.com" });
+
+    if (!owner) {
+      return res.status(404).json({ message: "Owner not found" });
+    }
+
+    owner.password = newPassword; // bcrypt hash will apply in pre-save hook
+    await owner.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Password updated successfully",
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+export const sendOTP = async (req, res) => {
+  const { email } = req.body;
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+  try {
+    let user = await FranchiseOwner.findOne({ email: "unas123@gmail.com" });
+    if (!user) {
+      return new Error(`No Franchise with ${email} exists`);
+    }
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "onboarding@resend.dev",
+        to: email,
+        subject: "Your OTP Code",
+        html: `<p>Your OTP is <strong>${otp}</strong></p>`,
+      }),
+    });
+
+    if (!response.ok) throw new Error("Failed to send email");
+
+    res.json({ message: "OTP sent", otp });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to send OTP" });
   }
 };

@@ -5,6 +5,8 @@ import {
   logoutOwner,
   me,
   changePassword,
+  sendOTP,
+  resetPassword,
 } from "../Controllers/ownerAuthController.js";
 import { isAuthenticated } from "../Middlewares/authMiddleware.js";
 
@@ -20,5 +22,7 @@ ownerAuthRoutes.post("/login", loginOwner);
 ownerAuthRoutes.get("/logout", isAuthenticated, logoutOwner);
 ownerAuthRoutes.get("/me", isAuthenticated, me);
 ownerAuthRoutes.post("/changepass", isAuthenticated, changePassword);
+ownerAuthRoutes.post("/sendOTP", sendOTP);
+ownerAuthRoutes.post("/reset-password", resetPassword);
 
 export default ownerAuthRoutes;

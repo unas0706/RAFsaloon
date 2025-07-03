@@ -1,42 +1,151 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import api from "../Api/api";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  // const [franchises, setFranchises] = useState();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      setTimeout(() => {
-        setUser({ name: "Admin", email: "admin@rafsaloon.com" });
-        setLoading(false);
-      }, 500);
-    } else {
-      setLoading(false);
-    }
-  }, []);
+    // getFranchises();
+    setLoading(false);
+  });
 
   const login = async (email, password) => {
-    if (email === "admin@example.com" && password === "password") {
-      localStorage.setItem("token", "dummy-token");
-      setUser({ name: "Admin", email });
+    // if (email === "admin@example.com" && password === "password") {
+    //   setUser({ name: "Admin", email });
+    //   return true;
+    // }
+    try {
+      let res = await api.post("/api/admin/login", { email, password });
+      setUser(res.data.owner);
       return true;
+    } catch (error) {
+      if (error.response) {
+        // The server responded with a status code outside 2xx
+        console.error("Server error:", error.response.data.message);
+        // alert(`Error: ${error.response.data.message}`);
+      } else if (error.request) {
+        // Request was made but no response (server down or no internet)
+        console.error("No response from server");
+        alert("No response from server. Please try again later.");
+      } else {
+        // Something else went wrong while setting up the request
+        console.error("Error:", error.message);
+        alert(`Unexpected error: ${error.message}`);
+      }
     }
     return false;
   };
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    setUser(null);
+  const changePassword = async (oldPassword, newPassword) => {
+    try {
+      let res = await api.post("/api/admin/changePasswrod", {
+        oldPassword,
+        newPassword,
+      });
+      console.log(res.data);
+    } catch (error) {
+      if (error.response) {
+        // The server responded with a status code outside 2xx
+        console.error("Server error:", error.response.data.message);
+        alert(`Error: ${error.response.data.message}`);
+      } else if (error.request) {
+        // Request was made but no response (server down or no internet)
+        console.error("No response from server");
+        alert("No response from server. Please try again later.");
+      } else {
+        // Something else went wrong while setting up the request
+        console.error("Error:", error.message);
+        alert(`Unexpected error: ${error.message}`);
+      }
+    }
+  };
+
+  const editAdmin = async (email, name) => {
+    try {
+      let res = await api.post("/api/admin/edit", {
+        email,
+        name,
+      });
+      console.log(res.data);
+    } catch (error) {
+      if (error.response) {
+        // The server responded with a status code outside 2xx
+        console.error("Server error:", error.response.data.message);
+        alert(`Error: ${error.response.data.message}`);
+      } else if (error.request) {
+        // Request was made but no response (server down or no internet)
+        console.error("No response from server");
+        alert("No response from server. Please try again later.");
+      } else {
+        // Something else went wrong while setting up the request
+        console.error("Error:", error.message);
+        alert(`Unexpected error: ${error.message}`);
+      }
+    }
+  };
+
+  // const getFranchises = async () => {
+  //   try {
+  //     let res = await api.get("/api/admin/franchises");
+  //     setFranchises(res.data.franchises);
+  //   } catch (error) {
+  //     if (error.response) {
+  //       // The server responded with a status code outside 2xx
+  //       console.error("Server error:", error.response.data.message);
+  //       alert(`Error: ${error.response.data.message}`);
+  //     } else if (error.request) {
+  //       // Request was made but no response (server down or no internet)
+  //       console.error("No response from server");
+  //       alert("No response from server. Please try again later.");
+  //     } else {
+  //       // Something else went wrong while setting up the request
+  //       console.error("Error:", error.message);
+  //       alert(`Unexpected error: ${error.message}`);
+  //     }
+  //   }
+  // };
+
+  const logout = async () => {
+    try {
+      let res = await api.get("/api/admin/logout");
+
+      setUser(null);
+      return res;
+    } catch (error) {
+      if (error.response) {
+        // The server responded with a status code outside 2xx
+        console.error("Server error:", error.response.data.message);
+        alert(`Error: ${error.response.data.message}`);
+      } else if (error.request) {
+        // Request was made but no response (server down or no internet)
+        console.error("No response from server");
+        alert("No response from server. Please try again later.");
+      } else {
+        // Something else went wrong while setting up the request
+        console.error("Error:", error.message);
+        alert(`Unexpected error: ${error.message}`);
+      }
+    }
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login,
+        logout,
+        changePassword,
+        editAdmin,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext); 
+export const useAuth = () => useContext(AuthContext);

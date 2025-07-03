@@ -1,31 +1,29 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useFranchise } from "../../context/FranchiseContext";
 
 const EditFranchise = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    name: "Downtown Branch",
-    location: "City Center",
-    status: "Active",
-    contact: "downtown@rafsaloon.com",
-    phone: "+1 234-567-8900",
-    openingDate: "2023-01-15",
-    manager: "John Doe"
-  });
+  const { franchises } = useFranchise();
+  const franchise = franchises.find((franchise) => franchise._id === id);
+
+  console.log(franchise);
+
+  const [formData, setFormData] = useState(franchise);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Here you would typically make an API call to update the franchise
-    alert('Franchise updated successfully!');
-    navigate('/franchises');
+    alert("Franchise updated successfully!");
+    navigate("/franchises");
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -33,8 +31,8 @@ const EditFranchise = () => {
     <div className="form-container">
       <div className="header-section">
         <h2>Edit Franchise</h2>
-        <button 
-          className="action-btn back" 
+        <button
+          className="action-btn back"
           onClick={() => navigate(`/franchise/${id}`)}
         >
           Back to Details
@@ -78,23 +76,23 @@ const EditFranchise = () => {
                 <option value="Pending">Pending</option>
               </select>
             </div>
-            <div className="form-group">
+            {/* <div className="form-group">
               <label>Opening Date</label>
               <input
                 type="date"
                 name="openingDate"
-                value={formData.openingDate}
+                value={formData.createdAt}
                 onChange={handleChange}
                 required
               />
-            </div>
+            </div> */}
           </div>
         </div>
 
         <div className="form-section">
           <h3>Contact Information</h3>
           <div className="form-grid">
-            <div className="form-group">
+            {/* <div className="form-group">
               <label>Contact Email</label>
               <input
                 type="email"
@@ -103,13 +101,13 @@ const EditFranchise = () => {
                 onChange={handleChange}
                 required
               />
-            </div>
+            </div> */}
             <div className="form-group">
               <label>Phone Number</label>
               <input
                 type="tel"
                 name="phone"
-                value={formData.phone}
+                value={formData.contact}
                 onChange={handleChange}
                 required
               />
@@ -119,7 +117,7 @@ const EditFranchise = () => {
               <input
                 type="text"
                 name="manager"
-                value={formData.manager}
+                value={formData.owner}
                 onChange={handleChange}
                 required
               />
@@ -131,10 +129,10 @@ const EditFranchise = () => {
           <button type="submit" className="submit-btn">
             Update Franchise
           </button>
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="cancel-btn"
-            onClick={() => navigate('/franchises')}
+            onClick={() => navigate("/franchises")}
           >
             Cancel
           </button>
@@ -144,4 +142,4 @@ const EditFranchise = () => {
   );
 };
 
-export default EditFranchise; 
+export default EditFranchise;

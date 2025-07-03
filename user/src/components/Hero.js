@@ -30,7 +30,7 @@ const Hero = () => {
           </span>{" "}
           <br /> <br />
           <br />
-          <Link to="/" className="btn-primary">
+          <Link to="/appointment" className="btn-primary">
             Appointment
           </Link>
         </div>
@@ -48,7 +48,7 @@ const Hero = () => {
           </span>{" "}
           <br /> <br />
           <br />
-          <Link to="/" className="btn-primary">
+          <Link to="/appointment" className="btn-primary">
             Appointment
           </Link>
         </div>

@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import { Navigate } from "react-router-dom";
+import ForgotPassword from "./pages/ForgotPassword";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
           }
         />
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
     </Router>
   );

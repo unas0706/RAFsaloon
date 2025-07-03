@@ -8,6 +8,7 @@ import bookingRoutes from "./Routers/bookingRoutes.js";
 import franchiseRoutes from "./Routers/franchiseRoutes.js";
 import memberRoutes from "./Routers/memberRoutes.js";
 import slotRoutes from "./Routers/slotRoutes.js";
+import adminRouter from "./Routers/admin.router.js";
 
 // Load environment variables with fallback
 try {
@@ -43,6 +44,7 @@ app.use("/api/bookings", bookingRoutes);
 app.use("/api/franchise", franchiseRoutes);
 app.use("/api/members", memberRoutes);
 app.use("/api/slots", slotRoutes);
+app.use("/api/admin", adminRouter);
 
 app.use(errorHandler);
 

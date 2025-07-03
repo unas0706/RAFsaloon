@@ -50,7 +50,7 @@ const FranchiseContent = ({ franchise = {}, stats = {} }) => {
         </div>
       </div>
 
-      <div className="performance-card">
+      {/* <div className="performance-card">
         <h2>Performance Metrics</h2>
         <div className="metrics-grid">
           <div className="metric-item">
@@ -73,7 +73,7 @@ const FranchiseContent = ({ franchise = {}, stats = {} }) => {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -47,4 +47,4 @@ const Login = () => {
   );
 };
 
-export default Login; 
+export default Login;

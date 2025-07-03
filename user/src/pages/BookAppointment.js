@@ -1,13 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
 import userApi from "../API/UserApi";
+import axios from "axios";
 
 const services = ["Tattoo", "Haircut", "Beard Trim", "Facial"];
-const locations = [
-  { _id: "681645b9259a6d7e083b0df7", location: "Downtown LA" },
-  { _id: "66102cd...", location: "Uptown NY" },
-];
 const timeSlots = [
   "10:00 AM",
   "11:00 AM",
@@ -27,31 +24,48 @@ const BookAppointment = () => {
   const [date, setDate] = useState("");
   const [franchise, setFranchise] = useState("");
   const [phone, setPhone] = useState("");
-  const [time, settime] = useState("");
+  const [time, setTime] = useState("");
+  const [locations, setLocations] = useState([]);
+
+  useEffect(() => {
+    const getFranchiseNames = async () => {
+      try {
+        const res = await userApi.get("api/franchise/getFranchiseNames");
+
+        setLocations(res.data.franchises); // assuming data is an array of franchises
+      } catch (err) {
+        console.error("Failed to load franchise names:", err);
+      }
+    };
+
+    getFranchiseNames();
+    console.log(locations);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (service === "Choose Service") {
+      alert("Please select a service before booking.");
+      return;
+    }
+
     try {
-      let val = await userApi.post("api/bookings/", {
+      const res = await userApi.post("api/bookings/", {
         service,
         date,
         franchise,
         time,
         phone,
       });
-      console.log(val);
-    } catch (err) {
-      if (err.response) {
-        // Server responded with a status other than 2xx
-        console.error("Error Response:", err.response.data);
-        console.error("Status:", err.response.status);
-      } else if (err.request) {
-        // No response received
-        console.error("No response from server:", err.request);
-      } else {
-        // Something else went wrong
-        console.error("Error:", err.message);
+
+      if (res.status === 201) {
+        alert("Appointment booked successfully!");
+        navigate("/appointment");
       }
+    } catch (err) {
+      console.error("Booking failed:", err);
+      alert("Something went wrong. Please try again.");
     }
   };
 
@@ -59,7 +73,7 @@ const BookAppointment = () => {
     <>
       <div
         style={{
-          height: "80%",
+          minHeight: "80vh",
           backgroundColor: "#1a1a1a",
           color: "#fff",
           display: "flex",
@@ -77,6 +91,7 @@ const BookAppointment = () => {
         >
           Book Your Appointment
         </h1>
+
         <p
           style={{
             fontSize: "1.2rem",
@@ -88,6 +103,8 @@ const BookAppointment = () => {
             ? `Selected Service: ${service}`
             : "Please select a service"}
         </p>
+
+        {/* Service Dropdown */}
         <div
           style={{ width: "100%", maxWidth: "400px", marginBottom: "1.5rem" }}
         >
@@ -110,13 +127,15 @@ const BookAppointment = () => {
             <option value="Choose Service" disabled>
               Choose a Service
             </option>
-            {services.map((service, index) => (
-              <option key={index} value={service}>
-                {service}
+            {services.map((s, i) => (
+              <option key={i} value={s}>
+                {s}
               </option>
             ))}
           </select>
         </div>
+
+        {/* Booking Form */}
         <form
           onSubmit={handleSubmit}
           style={{
@@ -127,6 +146,7 @@ const BookAppointment = () => {
             gap: "1rem",
           }}
         >
+          {/* Date Picker */}
           <input
             type="date"
             value={date}
@@ -143,9 +163,11 @@ const BookAppointment = () => {
               border: "none",
             }}
           />
+
+          {/* Time Slot Picker */}
           <select
             value={time}
-            onChange={(e) => settime(e.target.value)}
+            onChange={(e) => setTime(e.target.value)}
             required
             style={{
               width: "100%",
@@ -159,12 +181,14 @@ const BookAppointment = () => {
             }}
           >
             <option value="">Select Time Slot</option>
-            {timeSlots.map((time, index) => (
-              <option key={index} value={time}>
-                {time}
+            {timeSlots.map((slot, index) => (
+              <option key={index} value={slot}>
+                {slot}
               </option>
             ))}
           </select>
+
+          {/* Franchise Location Picker */}
           <select
             value={franchise}
             onChange={(e) => setFranchise(e.target.value)}
@@ -181,13 +205,15 @@ const BookAppointment = () => {
             }}
           >
             <option value="">Select Location</option>
-            {locations.map((loc) => (
-              <option key={loc._id} value={loc._id}>
-                {loc.location}
-              </option>
-            ))}
+            {locations &&
+              locations.map((loc) => (
+                <option key={loc._id} value={loc._id}>
+                  {loc.name}
+                </option>
+              ))}
           </select>
 
+          {/* Phone Number */}
           <input
             type="tel"
             placeholder="Enter your phone number"
@@ -204,6 +230,8 @@ const BookAppointment = () => {
               border: "none",
             }}
           />
+
+          {/* Submit Button */}
           <button
             type="submit"
             style={{

@@ -1,31 +1,46 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useFranchise } from "../../context/FranchiseContext";
 
 const CreateFranchise = () => {
   const navigate = useNavigate();
+  const { createFrnachise } = useFranchise();
   const [formData, setFormData] = useState({
-    name: '',
-    location: '',
-    status: 'Pending',
-    contact: '',
-    phone: '',
-    openingDate: '',
-    manager: ''
+    name: "",
+    location: "",
+    status: "Pending",
+    contact: "",
+    phone: "",
+    openingDate: "",
+    manager: "",
   });
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    createFrnachise(
+      formData.name,
+      formData.location,
+      formData.manager,
+      formData.phone,
+      formData.location,
+      formData.openingDate,
+      null,
+      formData.contact,
+      formData.contact
+    );
+
     // Here you would typically make an API call to create the franchise
     // For now, we'll simulate a successful creation
-    alert('Franchise created successfully!');
-    navigate('/franchises');
+    alert("Franchise created successfully!");
+    navigate("/franchises");
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -33,9 +48,9 @@ const CreateFranchise = () => {
     <div className="form-container">
       <div className="header-section">
         <h2>Create New Franchise</h2>
-        <button 
-          className="action-btn back" 
-          onClick={() => navigate('/franchises')}
+        <button
+          className="action-btn back"
+          onClick={() => navigate("/franchises")}
         >
           Back to List
         </button>
@@ -136,10 +151,10 @@ const CreateFranchise = () => {
           <button type="submit" className="submit-btn">
             Create Franchise
           </button>
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="cancel-btn"
-            onClick={() => navigate('/franchises')}
+            onClick={() => navigate("/franchises")}
           >
             Cancel
           </button>
@@ -149,4 +164,4 @@ const CreateFranchise = () => {
   );
 };
 
-export default CreateFranchise; 
+export default CreateFranchise;

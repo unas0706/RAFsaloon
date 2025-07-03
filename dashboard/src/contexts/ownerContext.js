@@ -133,6 +133,33 @@ const OwnerContextProvider = ({ children }) => {
     }
   };
 
+  const changePassword = async (oldPassword, newPassword) => {
+    try {
+      let res = await OwnerApi.post(
+        "/api/owners/changepass",
+        { oldPassword, newPassword },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(res.data);
+    } catch (error) {
+      if (error.response) {
+        // The server responded with a status code outside 2xx
+        console.error("Server error:", error.response.data.message);
+        alert(`Error: ${error.response.data.message}`);
+      } else if (error.request) {
+        // Request was made but no response (server down or no internet)
+        console.error("No response from server");
+        alert("No response from server. Please try again later.");
+      } else {
+        // Something else went wrong while setting up the request
+        console.error("Error:", error.message);
+        alert(`Unexpected error: ${error.message}`);
+      }
+    }
+  };
+
   const value = {
     members,
     setMembers,
@@ -141,6 +168,7 @@ const OwnerContextProvider = ({ children }) => {
     bookings,
     editFranchise,
     editMember,
+    changePassword,
   };
 
   return (

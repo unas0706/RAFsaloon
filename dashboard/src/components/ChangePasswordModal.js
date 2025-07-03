@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { FaTimes } from "react-icons/fa";
+import { useOwner } from "../contexts/ownerContext";
 
 const ChangePasswordModal = ({ isOpen, onClose, isLoading }) => {
+  const { changePassword } = useOwner();
   const [passwordForm, setPasswordForm] = useState({
     oldPassword: "",
     newPassword: "",
@@ -15,12 +17,7 @@ const ChangePasswordModal = ({ isOpen, onClose, isLoading }) => {
 
   const handleChangePassword = (e) => {
     e.preventDefault();
-
-    // DEMONSTRATION ONLY - NEVER LOG PASSWORDS IN PRODUCTION
-    console.log("Old Password:", passwordForm.oldPassword);
-    console.log("New Password:", passwordForm.newPassword);
-    console.log("Confirm Password:", passwordForm.confirmPassword);
-
+    changePassword(passwordForm.oldPassword, passwordForm.newPassword);
     // Add actual password change logic here
     onClose();
   };

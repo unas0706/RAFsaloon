@@ -123,3 +123,17 @@ export const getAllFranchises = async (req, res) => {
     });
   }
 };
+
+export const FranchiseNames = async (req, res) => {
+  try {
+    const franchises = await Franchise.find().select("_id name");
+
+    res.status(200).json({
+      success: true,
+      franchises,
+    });
+  } catch (error) {
+    console.error("FranchiseNames Error:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};

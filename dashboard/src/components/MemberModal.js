@@ -4,6 +4,7 @@ import { useOwner } from "../contexts/ownerContext";
 
 const MemberModal = ({
   isOpen,
+  isAdd,
   onClose,
   onSubmit,
   member,
@@ -12,6 +13,8 @@ const MemberModal = ({
   setMemberForm1,
   setmem,
 }) => {
+  const { addMember, editMember } = useOwner();
+
   const [memberForm, setMemberForm] = useState({
     name: "",
     joinDate: new Date().toISOString().split("T")[0],
@@ -76,6 +79,26 @@ const MemberModal = ({
     setMemberForm1(memberForm);
 
     onSubmit(memberForm); // pass data to parent
+
+    if (isAdd) {
+      addMember(
+        memberForm.name,
+        memberForm.joinDate,
+        memberForm.visits,
+        memberForm.membership,
+        memberForm.subscription,
+        memberForm.subscriptionEnd
+      );
+    }
+    if (isEdit) {
+      editMember(
+        memberForm.name,
+        memberForm.visits,
+        memberForm.membership,
+        memberForm.subscription,
+        memberForm.subscriptionEnd
+      );
+    }
   };
 
   if (!isOpen) return null;
@@ -88,7 +111,7 @@ const MemberModal = ({
         </div>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label>Full Name</label>
+            <label>Mobile Number</label>
             <input
               type="text"
               name="name"

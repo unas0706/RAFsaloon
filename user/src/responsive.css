@@ -5,7 +5,7 @@
   }
 
   .visible-xs {
-    display: block;
+    display: flex;
   }
 
   .hero-xs {

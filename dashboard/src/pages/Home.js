@@ -195,16 +195,16 @@ const AdminDashboard = () => {
       ...memberForm,
       visits: parseInt(memberForm.visits),
     };
-    if (isAddMemberOpen && mem) {
-      addMember(
-        mem.name,
-        mem.joinDate,
-        mem.visits,
-        mem.membership,
-        mem.subscription,
-        mem.subscriptionEnd
-      );
-    }
+    // if (isAddMemberOpen && mem) {
+    //   addMember(
+    //     mem.name,
+    //     mem.joinDate,
+    //     mem.visits,
+    //     mem.membership,
+    //     mem.subscription,
+    //     mem.subscriptionEnd
+    //   );
+    // }
 
     const {
       name,
@@ -258,15 +258,15 @@ const AdminDashboard = () => {
       })
     );
 
-    if (isEditMemberOpen && mem) {
-      editMember(
-        mem.name,
-        mem.visits,
-        mem.membership,
-        mem.subscription,
-        mem.subscriptionEnd
-      );
-    }
+    // if (isEditMemberOpen && mem) {
+    //   editMember(
+    //     mem.name,
+    //     mem.visits,
+    //     mem.membership,
+    //     mem.subscription,
+    //     mem.subscriptionEnd
+    //   );
+    // }
 
     setIsEditMemberOpen(false);
     setCurrentMember(null);
@@ -314,6 +314,7 @@ const AdminDashboard = () => {
             onSubmit={isAddMemberOpen ? handleAddMember : handleEditMember}
             member={currentMember}
             isEdit={isEditMemberOpen}
+            isAdd={isAddMemberOpen}
             isLoading={isLoading}
             memberForm={memberForm}
             setMemberForm1={setMemberForm}

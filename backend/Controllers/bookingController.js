@@ -1,5 +1,6 @@
 import Booking from "../Models/booking.model.js";
 import Slot from "../Models/Slot.model.js";
+import FranchiseOwner from "../Models/Owner.model.js";
 
 // Create a new booking
 export const createBooking = async (req, res) => {
@@ -31,6 +32,7 @@ export const createBooking = async (req, res) => {
       date,
       time,
     });
+    console.log(booking);
 
     res.status(201).json({ message: "Booking created successfully" });
   } catch (err) {
@@ -41,8 +43,14 @@ export const createBooking = async (req, res) => {
 // Get all bookings
 export const getBookings = async (req, res) => {
   try {
+    const owner = await FranchiseOwner.findById(req.owner._id);
+
     const bookings = await Booking.find();
-    res.status(200).json({ bookings });
+    const BookingsPaticluar = bookings.filter((ele) => {
+      return ele.franchise._id.toString() == owner.franchise.toString();
+    });
+
+    res.status(200).json({ bookings: BookingsPaticluar });
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err.message });
   }

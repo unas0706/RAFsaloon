@@ -35,7 +35,7 @@ const MembersContent = ({
       {members.length > 0 ? (
         <div className="members-table">
           <div className="table-header">
-            <div>Name</div>
+            <div>Mobile Number</div>
             <div>Join Date</div>
             <div>Membership</div>
             <div>Subscription</div>
