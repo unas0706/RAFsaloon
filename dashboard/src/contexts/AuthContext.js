@@ -10,15 +10,33 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getOwner();
+    const storedToken = localStorage.getItem("FranchiseOwner");
+
+    if (storedToken) {
+      setToken(storedToken);
+      AuthApi.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${storedToken}`;
+      getOwner(storedToken);
+    } else {
+      setLoading(false);
+    }
+
+    //getOwner();
   }, []);
 
-  const getOwner = async () => {
+  const getOwner = async (authToken = token) => {
     try {
-      const response = await AuthApi.get("/api/owners/me");
+      const response = await AuthApi.get("/api/owners/me", {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
       setUser(response.data);
     } catch (error) {
       setUser(null);
@@ -33,7 +51,17 @@ export const AuthProvider = ({ children }) => {
         email,
         password,
       });
-      setUser(response.data);
+
+      console.log(response.data);
+
+      const receivedToken = response.data.token;
+
+      localStorage.setItem("FranchiseOwner", receivedToken);
+      AuthApi.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${receivedToken}`;
+      setToken(receivedToken);
+      setUser(response.data.owner);
       return true;
     } catch (error) {
       console.error("Login failed:", error);
@@ -46,7 +74,11 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.post(
         "/api/auth/register",
         { name, email, password },
-        { withCredentials: true }
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setUser(response.data);
       return true;
@@ -58,9 +90,16 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      let val = await AuthApi.get("/api/owners/logout", {
-        withCredentials: true,
+      const token = localStorage.getItem("FranchiseOwner");
+
+      await AuthApi.get("/api/owners/logout", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+
+      localStorage.removeItem("FranchiseOwner");
+      delete AuthApi.defaults.headers.common["Authorization"];
       setUser(null);
       return true;
     } catch (error) {
@@ -76,6 +115,7 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     getOwner,
+    token,
   };
 
   return (

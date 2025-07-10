@@ -7,11 +7,11 @@ export const OwnerContext = createContext();
 const OwnerContextProvider = ({ children }) => {
   const [members, setMembers] = useState();
   const [bookings, setBookings] = useState();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
 
   useEffect(() => {
     const fetchMembers = async () => {
-      if (user) {
+      if (user && token) {
         await getMembers();
         await getBookings();
       }
@@ -20,9 +20,15 @@ const OwnerContextProvider = ({ children }) => {
     fetchMembers();
   }, [user]); // Add dependencies to avoid infinite re-renders
 
+  const authHeader = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
   const getMembers = async () => {
     try {
-      let res = await OwnerApi.get("/api/members/", { withCredentials: true });
+      let res = await OwnerApi.get("/api/members/", authHeader);
 
       setMembers(res.data.members);
     } catch (error) {
@@ -32,9 +38,7 @@ const OwnerContextProvider = ({ children }) => {
 
   const getBookings = async () => {
     try {
-      let res = await OwnerApi.get("/api/bookings", {
-        withCredentials: true,
-      });
+      let res = await OwnerApi.get("/api/bookings", authHeader);
       setBookings(res.data);
     } catch (error) {
       console.log(error);
@@ -53,9 +57,7 @@ const OwnerContextProvider = ({ children }) => {
       let res = await OwnerApi.post(
         "/api/members/",
         { name, joinDate, visits, membership, subscription, subscriptionEnd },
-        {
-          withCredentials: true,
-        }
+        authHeader
       );
     } catch (error) {
       if (error.response) {
@@ -89,7 +91,7 @@ const OwnerContextProvider = ({ children }) => {
       let res = await OwnerApi.patch(
         `/api/members/${id[0]._id}`,
         { visits, membership, subscription, subscriptionEnd },
-        { withCredentials: true }
+        authHeader
       );
     } catch (error) {
       if (error.response) {
@@ -112,9 +114,7 @@ const OwnerContextProvider = ({ children }) => {
       let res = await OwnerApi.patch(
         `/api/franchise/${user.owner.franchise._id}`,
         { name, location, owner, contact, address },
-        {
-          withCredentials: true,
-        }
+        authHeader
       );
     } catch (error) {
       if (error.response) {
@@ -138,11 +138,8 @@ const OwnerContextProvider = ({ children }) => {
       let res = await OwnerApi.post(
         "/api/owners/changepass",
         { oldPassword, newPassword },
-        {
-          withCredentials: true,
-        }
+        authHeader
       );
-      console.log(res.data);
     } catch (error) {
       if (error.response) {
         // The server responded with a status code outside 2xx

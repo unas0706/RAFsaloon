@@ -23,6 +23,7 @@ const AdminDashboard = () => {
   const { user } = useAuth();
   const { members, bookings, addMember, editMember } = useOwner();
   const Navigate = useNavigate();
+
   useEffect(() => {
     if (!user) {
       Navigate("/login");

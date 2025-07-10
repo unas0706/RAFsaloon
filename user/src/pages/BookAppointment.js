@@ -39,7 +39,6 @@ const BookAppointment = () => {
     };
 
     getFranchiseNames();
-    console.log(locations);
   }, []);
 
   const handleSubmit = async (e) => {

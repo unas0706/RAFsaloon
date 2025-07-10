@@ -28,10 +28,10 @@ const Sidebar = () => {
         <li className="nav-link side-link">
           <Link to="/franchise">Franchise</Link>
         </li>
-        <hr className="sidebar-hr" />
-        <li className="nav-link side-link">
+        {/* <hr className="sidebar-hr" /> */}
+        {/* <li className="nav-link side-link">
           <Link to="/gallery">Gallery</Link>
-        </li>
+        </li> */}
       </ul>
     </div>
   );

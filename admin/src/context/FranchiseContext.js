@@ -13,10 +13,10 @@ export const useFranchise = () => {
 };
 
 export const FranchiseProvider = ({ children }) => {
-  let { user } = useAuth();
+  let { user, token } = useAuth();
 
   useEffect(() => {
-    if (user) getFranchises();
+    if (token) getFranchises();
   }, [user]);
   // Franchise state
   const [franchises, setFranchises] = useState();
@@ -52,7 +52,11 @@ export const FranchiseProvider = ({ children }) => {
 
   const getFranchises = async () => {
     try {
-      let res = await api.get("/api/admin/franchises");
+      let res = await api.get("/api/admin/franchises", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setFranchises(res.data.franchises);
     } catch (error) {
       if (error.response) {

@@ -12,6 +12,8 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(user);
+
     if (loggedin || user) {
       navigate("/");
     }

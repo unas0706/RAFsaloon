@@ -1,5 +1,5 @@
-import React from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import React from "react";
+import { useAuth } from "../contexts/AuthContext";
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -7,6 +7,8 @@ const Dashboard = () => {
   const handleLogout = async () => {
     await logout();
   };
+
+  console.log(user);
 
   return (
     <div className="min-h-screen bg-gray-100">
@@ -46,4 +48,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard; 
+export default Dashboard;

@@ -62,10 +62,11 @@ export const loginOwner = async (req, res) => {
     const token = owner.generateToken();
 
     // Set token in cookie
-    res.cookie("token", token, cookieOptions);
+    // res.cookie("token", token, cookieOptions);
 
     res.status(200).json({
       success: true,
+      token,
       owner: {
         id: owner._id,
         name: owner.name,

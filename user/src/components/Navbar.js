@@ -28,9 +28,9 @@ const Navbar = () => {
         <li className="nav-link">
           <Link to="/franchise">Franchise</Link>
         </li>
-        <li className="nav-link">
+        {/* <li className="nav-link">
           <Link to="/gallery">Gallery</Link>
-        </li>
+        </li> */}
       </ul>
       <div className="menu-con visible-xs">
         <BiMenu

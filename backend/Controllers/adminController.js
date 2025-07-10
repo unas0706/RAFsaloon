@@ -28,10 +28,11 @@ export const loginAdmin = async (req, res) => {
     const token = owner.generateToken();
 
     // Set token in cookie
-    res.cookie("token", token, cookieOptions);
+    // res.cookie("token", token, cookieOptions);
 
     res.status(200).json({
       success: true,
+      token,
       owner: {
         id: owner._id,
         name: owner.name,
@@ -66,7 +67,12 @@ export const logoutAdmin = async (req, res) => {
 export const admin = async (req, res) => {
   res.status(200).json({
     success: true,
-    owner: req.owner,
+    // owner: req.admin,
+    owner: {
+      id: req.admin._id,
+      name: req.admin.name,
+      email: req.admin.email,
+    },
   });
 };
 

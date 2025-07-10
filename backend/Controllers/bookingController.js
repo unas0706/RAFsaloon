@@ -32,7 +32,6 @@ export const createBooking = async (req, res) => {
       date,
       time,
     });
-    console.log(booking);
 
     res.status(201).json({ message: "Booking created successfully" });
   } catch (err) {
