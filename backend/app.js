@@ -10,17 +10,9 @@ import memberRoutes from "./Routers/memberRoutes.js";
 import slotRoutes from "./Routers/slotRoutes.js";
 import adminRouter from "./Routers/admin.router.js";
 
-// Load environment variables with fallback
-try {
-  dotenv.config({ path: "./.env" });
-} catch (err) {
-  console.log("No .env file found, using default values");
-  process.env.PORT = process.env.PORT || 5000;
-  process.env.MONGO_URL =
-    process.env.MONGO_URL || "mongodb://localhost:27017/vitaldrop";
-  process.env.JWT_SECRET = process.env.JWT_SECRET || "your_secret_key_here";
-  process.env.JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
-}
+dotenv.config({ path: "./.env" });
+
+if (!process.env.PORT) process.env.PORT = "5000";
 
 const app = express();
 
@@ -29,14 +21,19 @@ const app = express();
 app.use(cookieParser());
 app.use(
   cors({
-    origin: true, // Allow all origins in development
+    origin: process.env.CORS_ORIGIN?.split(",") || true,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
     exposedHeaders: ["Set-Cookie"],
   })
 );
-app.use(express.json());
+app.use(express.json({ limit: "1mb" }));
+app.use(express.urlencoded({ extended: true, limit: "1mb" }));
+
+app.get("/health", (req, res) => {
+  res.status(200).json({ success: true, message: "OK" });
+});
 
 // Use routes
 app.use("/api/owners", ownerAuthRoutes);

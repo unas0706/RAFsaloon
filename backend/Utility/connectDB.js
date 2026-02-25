@@ -1,14 +1,22 @@
 import mongoose from "mongoose";
 
-const connectDB = () => {
-  mongoose
-    .connect(process.env.MONGO_URL, { dbName: "VitalDrop" })
-    .then(() => {
-      console.log("DB connection established");
-    })
-    .catch((err) => {
-      console.log(err.message);
+const connectDB = async () => {
+  const mongoUrl = process.env.MONGO_URL;
+
+  if (!mongoUrl) {
+    throw new Error("MONGO_URL is not configured");
+  }
+
+  try {
+    await mongoose.connect(mongoUrl, {
+      dbName: "VitalDrop",
+      serverSelectionTimeoutMS: 5000,
     });
+    console.log("DB connection established");
+  } catch (err) {
+    console.error("Failed to connect to database:", err.message);
+    process.exit(1);
+  }
 };
 
 export default connectDB;

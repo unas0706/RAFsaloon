@@ -1,10 +1,10 @@
 import app from "./app.js";
-import connectDB from "./utility/connectDB.js";
+import connectDB from "./Utility/connectDB.js";
 
-//connecting db
-connectDB();
+const PORT = Number(process.env.PORT) || 5000;
 
-//starting server
-app.listen(process.env.PORT, () => {
-  console.log("server has started");
+await connectDB();
+
+app.listen(PORT, () => {
+  console.log(`server has started on port ${PORT}`);
 });

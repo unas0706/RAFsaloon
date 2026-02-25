@@ -121,7 +121,7 @@ export const EditAdmin = async (req, res) => {
       message: "Admin Profile updated successfully",
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
@@ -133,6 +133,6 @@ export const getFranchises = async (req, res) => {
       franchises,
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error: err.message });
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };

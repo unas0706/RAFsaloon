@@ -1,6 +1,4 @@
 import FranchiseOwner from "../Models/Owner.model.js";
-import nodemailer from "nodemailer";
-import { Resend } from "resend";
 import fetch from "node-fetch";
 
 // Cookie options
@@ -145,8 +143,13 @@ export const resetPassword = async (req, res) => {
   try {
     const { email, newPassword } = req.body;
 
-    // Assuming req.owner is populated via middleware (e.g., auth middleware)
-    const owner = await FranchiseOwner.findOne({ email: "unas123@gmail.com" });
+    if (!email || !newPassword) {
+      return res
+        .status(400)
+        .json({ message: "Email and new password are required" });
+    }
+
+    const owner = await FranchiseOwner.findOne({ email });
 
     if (!owner) {
       return res.status(404).json({ message: "Owner not found" });
@@ -169,9 +172,13 @@ export const sendOTP = async (req, res) => {
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
 
   try {
-    let user = await FranchiseOwner.findOne({ email: "unas123@gmail.com" });
+    if (!email) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    const user = await FranchiseOwner.findOne({ email });
     if (!user) {
-      return new Error(`No Franchise with ${email} exists`);
+      return res.status(404).json({ message: `No Franchise with ${email} exists` });
     }
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -191,6 +198,6 @@ export const sendOTP = async (req, res) => {
 
     res.json({ message: "OTP sent", otp });
   } catch (error) {
-    res.status(500).json({ message: "Failed to send OTP" });
+    res.status(500).json({ message: "Failed to send OTP", error: error.message });
   }
 };
