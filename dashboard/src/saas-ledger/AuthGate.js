@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react';
-import {supabase} from './supabase';
+import {APP_URL,supabase} from './supabase';
 import './auth.css';
 
 const MIN_PASSWORD=12;
@@ -23,7 +23,8 @@ export default function AuthGate({children}){
    setLoading(false);
   };
   supabase.auth.getSession().then(({data})=>{
-   const recovery=window.location.hash.includes('type=recovery');
+   const recovery=new URLSearchParams(window.location.hash.replace(/^#/,'')).get('type')==='recovery';
+   if(recovery)window.history.replaceState({},'',window.location.pathname);
    finish(data.session,recovery?'PASSWORD_RECOVERY':undefined);
   });
   const {data:{subscription}}=supabase.auth.onAuthStateChange((event,s)=>finish(s,event));
@@ -49,7 +50,7 @@ export default function AuthGate({children}){
     const r=await supabase.auth.signInWithPassword({email:cleanEmail,password});
     if(r.error)throw r.error;
    }else{
-    const r=await supabase.auth.signUp({email:cleanEmail,password,options:{data:{display_name:name.trim()||cleanEmail.split('@')[0],workspace_name:workspace.trim()||'My SaaS'},emailRedirectTo:window.location.origin}});
+    const r=await supabase.auth.signUp({email:cleanEmail,password,options:{data:{display_name:name.trim()||cleanEmail.split('@')[0],workspace_name:workspace.trim()||'My SaaS'},emailRedirectTo:APP_URL}});
     if(r.error)throw r.error;
     if(r.data.session)setMessage('Account created.');
     else setMessage('Account created. Check your email to verify the account, then sign in.');
@@ -63,7 +64,7 @@ export default function AuthGate({children}){
   if(!cleanEmail)return setError('Enter your email address first.');
   setBusy(true);
   try{
-   const r=await supabase.auth.resetPasswordForEmail(cleanEmail,{redirectTo:window.location.origin});
+   const r=await supabase.auth.resetPasswordForEmail(cleanEmail,{redirectTo:APP_URL});
    if(r.error)throw r.error;
    setMessage('If an account exists for this email, a password reset link has been sent. Check your inbox and spam folder.');
   }catch(err){setError(err?.message||'Could not send the reset email. Please try again.');}
