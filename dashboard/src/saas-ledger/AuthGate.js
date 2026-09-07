@@ -1,0 +1,16 @@
+import React,{useEffect,useState} from 'react';
+import {supabase} from './supabase';
+import './auth.css';
+
+export default function AuthGate({children}){
+ const [session,setSession]=useState(null),[loading,setLoading]=useState(true),[mode,setMode]=useState('login'),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[name,setName]=useState(''),[workspace,setWorkspace]=useState('My SaaS'),[message,setMessage]=useState(''),[error,setError]=useState(''),[busy,setBusy]=useState(false);
+ useEffect(()=>{let mounted=true; supabase.auth.getSession().then(({data})=>{if(mounted){setSession(data.session);setLoading(false)}}); const {data:{subscription}}=supabase.auth.onAuthStateChange((_e,s)=>setSession(s)); return()=>{mounted=false;subscription.unsubscribe()};},[]);
+ const submit=async e=>{e.preventDefault();setBusy(true);setError('');setMessage('');
+  if(password.length<12){setError('Use a password with at least 12 characters.');setBusy(false);return;}
+  const r=mode==='login'?await supabase.auth.signInWithPassword({email:email.trim(),password}):await supabase.auth.signUp({email:email.trim(),password,options:{data:{display_name:name.trim()||email.split('@')[0],workspace_name:workspace.trim()||'My SaaS'},emailRedirectTo:window.location.origin}});
+  setBusy(false); if(r.error)setError(r.error.message); else if(mode==='signup'&&!r.data.session)setMessage('Account created. Check your email to verify it, then sign in.');
+ };
+ if(loading)return <div className="auth-shell"><div className="auth-card">Loading secure session…</div></div>;
+ if(session)return children;
+ return <div className="auth-shell"><div className="auth-card"><div className="brand">SAAS OPERATING LEDGER</div><h1>{mode==='login'?'Welcome back':'Create your workspace'}</h1><p>{mode==='login'?'Sign in to access your private CRM and operating system.':'Your workspace is isolated from every other team.'}</p>{error&&<div className="auth-error">{error}</div>}{message&&<div className="auth-message">{message}</div>}<form onSubmit={submit}>{mode==='signup'&&<><label>Name<input value={name} onChange={e=>setName(e.target.value)} autoComplete="name"/></label><label>Workspace name<input value={workspace} onChange={e=>setWorkspace(e.target.value)} autoComplete="organization"/></label></>}<label>Email<input type="email" required value={email} onChange={e=>setEmail(e.target.value)} autoComplete="email"/></label><label>Password<input type="password" required value={password} onChange={e=>setPassword(e.target.value)} autoComplete={mode==='login'?'current-password':'new-password'}/></label><button className="auth-submit" disabled={busy}>{busy?'Please wait…':mode==='login'?'Sign in':'Create account'}</button></form><button className="auth-switch" onClick={()=>{setMode(mode==='login'?'signup':'login');setError('');setMessage('')}}>{mode==='login'?'Create a new workspace':'Already have an account? Sign in'}</button>{mode==='login'&&<button className="auth-link" onClick={async()=>{if(!email)return setError('Enter your email first.');const r=await supabase.auth.resetPasswordForEmail(email.trim(),{redirectTo:window.location.origin});if(r.error)setError(r.error.message);else setMessage('Password reset email sent.')}}>Forgot password?</button>}</div></div>;
+}
