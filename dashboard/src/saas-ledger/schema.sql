@@ -1,0 +1,2 @@
+-- Production schema is applied to Supabase project qvprijthnqoglrjilzbk.
+-- See the Supabase migration named create_saas_operating_ledger_schema.
