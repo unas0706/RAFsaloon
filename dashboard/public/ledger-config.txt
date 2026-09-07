@@ -1,0 +1,3 @@
+SaaS Operating Ledger
+Supabase project: qvprijthnqoglrjilzbk
+App entry: /ledger
