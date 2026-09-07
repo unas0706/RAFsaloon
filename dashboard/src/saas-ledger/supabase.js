@@ -1,8 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-// In production, auth emails must always return to the deployed application,
-// not whatever origin happened to be used when the request was made.
-export const APP_URL = (process.env.REACT_APP_APP_URL || window.location.origin).replace(/\/$/, '');
+const browserOrigin = typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000';
+export const APP_URL = (process.env.REACT_APP_APP_URL || browserOrigin).replace(/\/$/, '');
 
 export const supabase = createClient(
   process.env.REACT_APP_SUPABASE_URL,
