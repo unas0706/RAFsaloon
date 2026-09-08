@@ -21,7 +21,7 @@ function transformHtml(h){
     ['<option>upcoming</option><option>active</option><option>done</option>','<option>Not Started</option><option>In Progress</option><option>Complete</option>'],
     ['status:"active"','status:"Active"'],
     ['i.status===\'paid\'?\'unpaid\':\'paid\'','i.status===\'Paid\'?\'Open\':\'Paid\''],
-    ['status:i.status===\'paid\'?\'unpaid\':\'paid\'','status:i.status===\'Paid\'?\'Open\':\'Paid\'],
+    ['status:i.status===\'paid\'?\'unpaid\':\'paid\'','status:i.status===\'Paid\'?\'Open\':\'Paid\''],
     ['status:"unpaid"','status:"Open"'],
     ['status===\'paid\'','status===\'Paid\'],
     ['paid_at:i.status===\'paid\'?null','paid_at:i.status===\'Paid\'?null']
@@ -38,11 +38,12 @@ function transformHtml(h){
 }
 
 function safeFile(urlPath){
-  const clean=decodeURIComponent(urlPath.split('?')[0]);
-  const relative=clean==='/'||clean==='/index.html'?'index.html':clean.replace(/^\/+/, '');
+  let clean=decodeURIComponent(urlPath.split('?')[0]);
+  if(clean==='/'||clean==='/index.html')clean='/index.html';
+  const relative=clean.replace(/^\/+/, '');
   const file=path.resolve(root,relative);
   const rootResolved=path.resolve(root);
-  if(file!==rootResolved && !file.startsWith(rootResolved+path.sep))return null;
+  if(!file.startsWith(rootResolved+path.sep))return null;
   return file;
 }
 
