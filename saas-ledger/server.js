@@ -4,26 +4,16 @@ const path=require('path');
 const root=__dirname;
 const port=Number(process.env.PORT)||10000;
 const types={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.json':'application/json'};
-
 function transformHtml(h){
   const replacements=[
     ['status:i===2||i===3?"active":i<2?"done":"upcoming"','status:i===2||i===3?"In Progress":i<2?"Complete":"Not Started"'],
-    ['type:"task"','type:"Task"'],
-    ['status:i<2?"done":"open"','status:i<2?"Done":"Not Started"'],
-    ['p.status==="active"','p.status==="In Progress"'],
-    ['p.status==="done"','p.status==="Complete"'],
-    ['p.status===\'done\'','p.status===\'Complete\''],
-    ['p.status===\'active\'','p.status===\'In Progress\''],
-    ['p.status===\'upcoming\'','p.status===\'Not Started\''],
-    ['t.completed?"open":"done"','t.completed?"Not Started":"Done"'],
-    ['type:"issue"','type:"Issue"'],
+    ['type:"task"','type:"Task"'],['status:i<2?"done":"open"','status:i<2?"Done":"Not Started"'],
+    ['p.status==="active"','p.status==="In Progress"'],['p.status==="done"','p.status==="Complete"'],
+    ['p.status===\'done\'','p.status===\'Complete\''],['p.status===\'active\'','p.status===\'In Progress\''],['p.status===\'upcoming\'','p.status===\'Not Started\''],
+    ['t.completed?"open":"done"','t.completed?"Not Started":"Done"'],['type:"issue"','type:"Issue"'],
     ['<option>P0</option><option>High</option><option>Normal</option>','<option>Critical</option><option>High</option><option>Medium</option>'],
     ['<option>upcoming</option><option>active</option><option>done</option>','<option>Not Started</option><option>In Progress</option><option>Complete</option>'],
-    ['status:"active"','status:"Active"'],
-    ['i.status===\'paid\'?\'unpaid\':\'paid\'','i.status===\'Paid\'?\'Open\':\'Paid\'],
-    ['status:"unpaid"','status:"Open"'],
-    ['status===\'paid\'','status===\'Paid\'],
-    ['paid_at:i.status===\'paid\'?null','paid_at:i.status===\'Paid\'?null']
+    ['status:"active"','status:"Active"'],['status:"unpaid"','status:"Open"']
   ];
   for(const [a,b] of replacements)h=h.split(a).join(b);
   h=h.replace('SB.from("work_items").select("*").eq("workspace_id",id).eq("type","task")','SB.from("work_items").select("*").eq("workspace_id",id)');
@@ -35,31 +25,6 @@ function transformHtml(h){
   h=h.replace("s==='Blocked'||s==='unpaid'||s==='at-risk'","s==='Blocked'||s==='Open'||s==='Overdue'||s==='at-risk'");
   return h;
 }
-
-function safeFile(urlPath){
-  let clean=decodeURIComponent(urlPath.split('?')[0]);
-  if(clean==='/'||clean==='/index.html')clean='/index.html';
-  const relative=clean.replace(/^\/+/, '');
-  const file=path.resolve(root,relative);
-  const rootResolved=path.resolve(root);
-  if(!file.startsWith(rootResolved+path.sep))return null;
-  return file;
-}
-
-const server=http.createServer((req,res)=>{
-  const urlPath=(req.url||'/').split('?')[0];
-  if(urlPath==='/health'){
-    res.writeHead(200,{'content-type':'application/json; charset=utf-8','cache-control':'no-store'});
-    return res.end(JSON.stringify({ok:true,service:'saas-ledger'}));
-  }
-  const file=safeFile(urlPath);
-  if(!file){res.writeHead(400,{'content-type':'text/plain; charset=utf-8'});return res.end('Bad path');}
-  fs.readFile(file,(err,buf)=>{
-    if(err){res.writeHead(err.code==='ENOENT'?404:500,{'content-type':'text/plain; charset=utf-8'});return res.end(err.code==='ENOENT'?'Not found':'Server error');}
-    let body=buf;
-    if(path.extname(file)==='.html')body=Buffer.from(transformHtml(buf.toString('utf8')),'utf8');
-    res.writeHead(200,{'content-type':types[path.extname(file)]||'application/octet-stream','cache-control':'no-store','x-content-type-options':'nosniff'});
-    res.end(body);
-  });
-});
+function safeFile(urlPath){let clean=decodeURIComponent(urlPath.split('?')[0]);if(clean==='/'||clean==='/index.html')clean='/index.html';const file=path.resolve(root,clean.replace(/^\/+/,''));const rr=path.resolve(root);return file.startsWith(rr+path.sep)?file:null;}
+const server=http.createServer((req,res)=>{const u=(req.url||'/').split('?')[0];if(u==='/health'){res.writeHead(200,{'content-type':'application/json; charset=utf-8','cache-control':'no-store'});return res.end(JSON.stringify({ok:true,service:'saas-ledger'}));}const file=safeFile(u);if(!file){res.writeHead(400);return res.end('Bad path');}fs.readFile(file,(err,buf)=>{if(err){res.writeHead(err.code==='ENOENT'?404:500);return res.end(err.code==='ENOENT'?'Not found':'Server error');}let body=buf;if(path.extname(file)==='.html')body=Buffer.from(transformHtml(buf.toString('utf8')),'utf8');res.writeHead(200,{'content-type':types[path.extname(file)]||'application/octet-stream','cache-control':'no-store','x-content-type-options':'nosniff'});res.end(body);});});
 server.listen(port,'0.0.0.0',()=>console.log(`SaaS Ledger listening on ${port}`));
