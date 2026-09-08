@@ -20,8 +20,7 @@ function transformHtml(h){
     ['<option>P0</option><option>High</option><option>Normal</option>','<option>Critical</option><option>High</option><option>Medium</option>'],
     ['<option>upcoming</option><option>active</option><option>done</option>','<option>Not Started</option><option>In Progress</option><option>Complete</option>'],
     ['status:"active"','status:"Active"'],
-    ['i.status===\'paid\'?\'unpaid\':\'paid\'','i.status===\'Paid\'?\'Open\':\'Paid\''],
-    ['status:i.status===\'paid\'?\'unpaid\':\'paid\'','status:i.status===\'Paid\'?\'Open\':\'Paid\''],
+    ['i.status===\'paid\'?\'unpaid\':\'paid\'','i.status===\'Paid\'?\'Open\':\'Paid\'],
     ['status:"unpaid"','status:"Open"'],
     ['status===\'paid\'','status===\'Paid\'],
     ['paid_at:i.status===\'paid\'?null','paid_at:i.status===\'Paid\'?null']
