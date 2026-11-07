@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: saas-operating-ledger
+    runtime: static
+    rootDir: dashboard
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./build
+    envVars:
+      - key: REACT_APP_SUPABASE_URL
+        sync: false
+      - key: REACT_APP_SUPABASE_ANON_KEY
+        sync: false

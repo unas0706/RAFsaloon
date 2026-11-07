@@ -1,8 +1,19 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import App from './App';
 
-test('renders learn react link', () => {
+jest.mock('./saas-ledger/supabase', () => ({
+  APP_URL: 'https://saas-operating-ledger.onrender.com',
+  supabase: {
+    auth: {
+      getSession: jest.fn().mockResolvedValue({ data: { session: null } }),
+      onAuthStateChange: jest.fn(() => ({ data: { subscription: { unsubscribe: jest.fn() } } })),
+    },
+  },
+}));
+
+test('renders the SaaS Operating Ledger sign-in screen', async () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  await waitFor(() => expect(screen.getByText(/welcome back/i)).toBeInTheDocument());
+  expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
+  expect(screen.getByLabelText(/password/i)).toBeInTheDocument();
 });

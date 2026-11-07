@@ -1,0 +1,1 @@
+Deployment fix: momentia-agency/index.html.gz is now a real gzip blob, so the existing Render build command can decompress it into public/index.html. This file is intentionally plain text.
