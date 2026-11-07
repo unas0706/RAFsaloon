@@ -12,7 +12,7 @@ import Sidebar from "./components/Sidebar";
 const App = () => {
   return (
     <>
-      <BrowserRouter>
+      <BrowserRouter basename="/dashboard">
         <Navbar />
         <Sidebar />
         <Routes>

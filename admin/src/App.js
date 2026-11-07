@@ -15,7 +15,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import "./styles/style.css";
 
 const App = () => (
-  <Router>
+  <Router basename="/admin">
     <AuthProvider>
       <FranchiseProvider>
         <Navigation />
